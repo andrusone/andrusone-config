@@ -1,0 +1,55 @@
+exclude: ^sql/source/
+
+repos:
+  # Python: Black and Ruff
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3
+        files: ^python/.*
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.2
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^python/.*
+
+  # Shell: shellcheck only (shfmt removed)
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+        files: ^shell/.*
+        additional_dependencies: []
+
+  # SQLFluff: multiple dialects with autofix enabled
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.3.1
+    hooks:
+      - id: sqlfluff-lint
+        name: sqlfluff-fix-ansi
+        entry: sqlfluff fix
+        args: [--dialect=ansi]
+        files: ^sql/ansi/.*
+      - id: sqlfluff-lint
+        name: sqlfluff-fix-tsql
+        entry: sqlfluff fix
+        args: [--dialect=tsql]
+        files: ^sql/tsql/.*
+      - id: sqlfluff-lint
+        name: sqlfluff-fix-snowflake
+        entry: sqlfluff fix
+        args: [--dialect=snowflake]
+        files: ^sql/snowflake/.*
+
+  # Local pytest hook
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: poetry run pytest
+        language: system
+        types: [python]
+        files: ^tests/

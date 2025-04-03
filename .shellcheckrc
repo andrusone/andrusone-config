@@ -1,0 +1,11 @@
+# .shellcheckrc
+# Configuration for consistent linting rules across the project
+
+# Exclude some harmless or noisy warnings (optional)
+exclude=SC1090,SC2086
+
+# Shell dialect for scripts (bash by default)
+shell=bash
+
+# Allow some relaxed rules
+source-path=SCRIPTDIR
