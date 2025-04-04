@@ -6,7 +6,7 @@
 set -euo pipefail
 
 main() {
-  echo "Hello from sample shell script!"
+  echo "Hello from sample shell script."
 }
 
 main "$@"
