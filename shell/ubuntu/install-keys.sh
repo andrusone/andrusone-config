@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SSH key setup + Git identity configuration
+# SSH key setup + Git identity configuration + passphrase persistence via keychain
 
 set -e  # Exit on error
 
@@ -21,8 +21,9 @@ KEY_NAME=${KEY_NAME:-andrusone.dev}
 MOUNT_POINT="/mnt/keys"
 DEST_DIR="$HOME/.ssh"
 
-# --- Ensure cifs-utils is installed ---
-sudo apt update && sudo apt install -y cifs-utils
+# --- Ensure cifs-utils and keychain are installed ---
+sudo apt update
+sudo apt install -y cifs-utils keychain
 
 # --- Mount the Windows share ---
 sudo mkdir -p "$MOUNT_POINT"
@@ -40,24 +41,21 @@ chmod 600 "$DEST_DIR/$KEY_NAME"
 sudo umount "$MOUNT_POINT"
 sudo rmdir "$MOUNT_POINT"
 
-# --- Start SSH agent and add key ---
-eval "$(ssh-agent -s)"
-ssh-add "$DEST_DIR/$KEY_NAME"
-
-# --- Persist SSH agent config ---
+# --- Set up keychain in .bashrc ---
 BASHRC="$HOME/.bashrc"
-START_LINE="eval \"\$(ssh-agent -s)\""
-ADD_KEY_LINE="ssh-add $DEST_DIR/$KEY_NAME 2>/dev/null"
+KEYCHAIN_LINE="eval \"\$(keychain --quiet --eval ~/.ssh/$KEY_NAME)\""
 
-if ! grep -q "$START_LINE" "$BASHRC"; then
+if ! grep -q 'keychain' "$BASHRC"; then
   {
     echo ""
-    echo "# Start ssh-agent and load key"
-    echo "$START_LINE"
-    echo "$ADD_KEY_LINE"
+    echo "# Start keychain to auto-load SSH key"
+    echo "$KEYCHAIN_LINE"
   } >> "$BASHRC"
-  echo "✅ Added ssh-agent startup and key load to $BASHRC"
+  echo "✅ Added keychain configuration to $BASHRC"
 fi
+
+# --- Start keychain for current session ---
+eval "$(keychain --quiet --eval "$DEST_DIR/$KEY_NAME")"
 
 # --- GitHub SSH test ---
 echo "🔧 Testing GitHub SSH connection..."
@@ -76,4 +74,4 @@ if ! git config --global user.email &>/dev/null; then
   echo "✅ Git user.email set to: $GIT_EMAIL"
 fi
 
-echo "✅ SSH key setup and Git identity configuration complete."
+echo "✅ SSH key setup, keychain configuration, and Git identity complete."
