@@ -1,0 +1,78 @@
+// -----------------------------------------------------------------------------
+// .vscode/settings.json — Remote Development Environment Configuration
+//
+// Executive Summary:
+// This VS Code configuration is tailored for Python + shell + SQL development
+// on a remote Linux host using Poetry and direnv. It ensures:
+// - VS Code uses the Poetry-managed `.venv` for Python execution, linting, and formatting
+// - Pre-commit hooks work reliably from within the virtual environment
+// - Shell scripts are formatted with shfmt
+// - SQL files are linted and optionally auto-formatted with sqlfluff
+//
+// Value Delivered:
+// - Seamless cross-language formatting and linting
+// - Auto-detection and activation of the correct environment
+// - Git-integrated pre-commit enforcement
+//
+// Required Tools (installed on the remote host):
+// - Python 3 and Poetry
+// - pre-commit, black, ruff, sqlfluff (installed via Poetry)
+// - direnv with `.envrc` using `layout poetry`
+// - shellcheck, shfmt (for shell script support)
+// - Optional VS Code extensions (installed remotely):
+//     - ms-python.python
+//     - foxundermoon.shell-format
+//     - bradlc.vscode-sql-formatter (for SQL formatting)
+// -----------------------------------------------------------------------------
+{
+  // Python environment (Poetry-managed via direnv)
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.venvPath": "${workspaceFolder}/.venv",
+  "python.terminal.activateEnvironment": true,
+
+  // Python linting and formatting
+  "python.linting.enabled": true,
+  "python.linting.ruffEnabled": true,
+  "python.linting.ruffArgs": ["--fix"],
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length", "88"],
+  "editor.formatOnSave": true,
+
+  // Shell script formatting
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.formatOnSave": true
+  },
+
+  // Pre-commit (run via Poetry virtualenv)
+  "pre-commit.runOnSave": false,
+  "pre-commit.executablePath": "${workspaceFolder}/.venv/bin/pre-commit",
+
+  // SQLFluff configuration for SQL linting
+  "[sql]": {
+    "editor.defaultFormatter": "bradlc.vscode-sql-formatter",
+    "editor.formatOnSave": false
+  },
+  "sqlfluff.linter.run": "onType",
+  "sqlfluff.linter.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",
+  "sqlfluff.linter.config": "${workspaceFolder}/.sqlfluff",
+  "sqlfluff.format.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",
+  "sqlfluff.format.config": "${workspaceFolder}/.sqlfluff",
+  "sqlfluff.format.args": ["fix", "--disable-progress-bar", "--force"],
+
+  // Clean save settings for all file types
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+
+  // Extension hints (ensure remote-side installs)
+  "remote.extensionKind": {
+    "ms-python.python": "workspace",
+    "foxundermoon.shell-format": "workspace",
+    "bradlc.vscode-sql-formatter": "workspace"
+  },
+
+  // Git behavior
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false
+}
