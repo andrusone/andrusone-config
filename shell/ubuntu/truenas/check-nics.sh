@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# check-nics.sh — Check link status for all network interfaces
+# check-nics.sh — Check link status for all network interface s
 
 for iface in /sys/class/net/*; do
   iface_name=$(basename "$iface")
