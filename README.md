@@ -1,132 +1,132 @@
-# 🚀 AndrusOne-DevKit  
-## A Smart Start for Multi-Stack Engineering
+# AndrusOne-Config
 
-[![CI](https://github.com/andrusone/andrusone-devkit/actions/workflows/verify-devkit.yml/badge.svg)](https://github.com/andrusone/andrusone-devkit/actions)
+## Environment Bootstrap for Engineers Who Ship
 
-**Welcome to your all-in-one project starter**, designed for developers, data engineers, and systems pros who want to move fast without compromising quality.
+This repository contains cross-platform configuration scripts for Python, PowerShell, Bash, and SQL developers. It’s designed to help new engineers set up a reliable, clean environment—without wrestling with dotfile magic, cryptic tools, or wasted time.
 
-This template provides a clean, modern foundation for projects that involve:
-
-- Python
-- SQL (multiple dialects)
-- Bash and PowerShell
-- Pre-commit hooks and formatting standards across platforms
-
-🧐 Built for people who write **code that runs, data that matters, and systems that last**.
+Built for people who want to **start quickly**, **work cleanly**, and **ship with confidence**.
 
 ---
 
-## ✨ Why This Template?
+## Why This Repo Exists
 
-In a world of fragmented tooling and tech silos, this template gives you a **harmonized, cross-platform, cross-language devkit** that just works.
+Modern engineers touch many systems—Windows, Linux, cloud shells, containers. But your tooling shouldn’t fight you. This repo gives you a transparent, testable setup for:
 
-👉 **Smart**: Pre-configured for pre-commit linting, formatting, and consistency\
-👉 **Modern**: Git-signing, structured layouts, `.editorconfig`, and Python `pyproject.toml`\
-👉 **Agile**: Works on Windows, Ubuntu, RHEL, and CentOS with setup scripts for both\
-👉 **Versatile**: Supports shell, SQL, Python, and PowerShell—because your stack doesn’t fit in a box
+- Terminal styling with readable prompts
+- Pre-commit Git hooks and SSH signing
+- Python linting, formatting, and dependency setup
+- Shell plugins, fonts, and aliases that make sense
+- AWS CLI integration with profile switching
+- VS Code settings for syntax-aware editing
 
-Whether you're building data pipelines, admin tooling, or internal apps, this template scales with you.
+Everything here is modular. You run what you need. You read what you run.
 
 ---
 
-## ⚙️ Quick Start
+## What This Configures
 
-1. **Create your project from this template:**  
-   Click the green "Use this template" button on GitHub → _"Create a new repository"_
+- PowerShell with Oh My Posh and AWS context
+- Bash or Zsh with custom themes and aliases
+- Git SSH key generation and signing
+- Python environment setup with Poetry, Black, Ruff
+- SQL dialect-aware linters and directory structure
+- VS Code settings (optional but recommended)
+- JetBrains Mono Nerd Font + terminal styling guide
+- AWS CLI and SSO profile automation
 
-2. **Clone your new repo and run the setup:**
+---
+
+## Quick Start
+
+1. Clone this repository:
 
    ```bash
-   git clone git@github.com:your-user/your-repo.git
-   cd your-repo
-   ./scripts/devkit-init.sh
+   git clone https://github.com/andrusone/andrusone-config.git
+   cd andrusone-config
    ```
 
-3. **Run verification to ensure your environment is ready:**
+2. Choose the setup script for your system:
 
-   ```bash
-   ./scripts/devkit-verify-env.sh
-   ```
+   - On Linux/macOS:
+     ```bash
+     ./setup.sh
+     ```
+   - On Windows (Run from PowerShell as Administrator):
+     ```powershell
+     .\setup.ps1
+     ```
 
-4. **Scaffold sample files to test pre-commit hooks:**
+3. Follow the prompts and optional steps:
 
-   ```bash
-   ./scripts/devkit-scaffold-samples.sh
-   ```
+   - Install fonts
+   - Apply terminal theme
+   - Configure Git and AWS profiles
 
-5. **Start coding!**
-
-   Everything is ready — just add your logic.
+4. Restart your terminal and confirm everything works.
 
 ---
 
-## 📦 What You Get Out of the Box
-
-- 🐍 Python: Poetry, Black, Ruff, pre-commit
-- 🐚 Bash: ShellCheck
-- 🪟 PowerShell: Directory placeholder for future linting
-- 🗃️ SQL: SQLFluff with dialect-specific folders
-- 🔁 Git: Pre-commit hooks installed and auto-updated
-- 🧪 Scripts: Scaffold + verify your environment anytime
-
----
-
-## 🤝 Contributing
-
-If you’ve got improvements, bug fixes, or new language support to add:
-
-1. Fork this template
-2. Create a feature branch
-3. Open a pull request with a clear explanation
-
-Want to help make this even more cross-stack and powerful? PRs welcome.
-
----
-
-## 📁 Project Layout
-
-Here’s how the project is structured—and why it matters:
+## Repository Structure
 
 ```
-project-template/
-│
-├── python/                    # Python scripts, modules, or analysis tools
-├── shell/                     # Shell scripts by OS flavor
-│   ├── ubuntu/
-│   ├── rhel/
-│   └── centos/
-├── powershell/                # PowerShell scripts for Windows and cross-platform ops
-├── sql/                       # Organized SQL dialects for clarity and maintainability
-│   ├── tsql/                  # Microsoft SQL Server (T-SQL)
-│   ├── ansi/                  # ANSI-standard SQL
-│   ├── snowflake/             # Snowflake-specific syntax and tooling
-│   ├── plsql/                 # Oracle PL/SQL
-│   └── source/                # Shared SQL templates or external source files
-├── .pre-commit-config.yaml    # All hook configs for pre-commit
-├── pyproject.toml             # Python formatting, linting, and metadata config
-├── requirements.txt           # Python package list (when not using Poetry)
-├── README.md                  # You’re reading it 😄
-└── .editorconfig              # Consistent whitespace/style across editors
+andrusone-config/
+├── powershell/        # Windows environment setup (PowerShell 7+)
+├── shell/             # Linux/macOS setup (Bash, Zsh)
+├── fonts/             # Font install instructions (JetBrains Mono Nerd Font)
+├── vscode/            # Recommended VS Code extensions and settings
+├── aws/               # AWS CLI, SSO, and prompt setup
+├── LICENSE
+├── README.md
+└── bootstrap.log      # Generated during setup to track what ran
 ```
 
 ---
 
-## 🔭 Inspired by the AndrusOne philosophy
+## Configuration Philosophy
 
-This devkit reflects a mindset of **clarity, quality, and velocity**. It helps you:
+**Clarity over cleverness.**
+Every command is visible, readable, and logged.
 
-- Start faster 🚨
-- Stay clean 🧹
-- Ship with confidence ✅
+**Simplicity scales.**
+The goal is repeatable setups with no hidden state.
 
----
+**Testability over trust.**
+Scripts run cleanly and verify their impact.
 
-## 🔗 Let’s Connect
-
-Got feedback? Want to contribute something clever? Reach out on [GitHub](https://github.com/andrusone) or connect via [andrusone.dev](https://andrusone.dev).
-
-Happy hacking! 🧑‍💻
+**Empathy over ego.**
+This is for real engineers, not config wizards.
 
 ---
 
-Made with 💻 by Dave Andrus
+## Contribution Guidelines
+
+Contributions are welcome if they follow the philosophy:
+
+- Fork the repo
+- Create a feature branch
+- Submit a pull request with a clear rationale
+
+Please keep changes minimal, tested, and clearly documented.
+
+---
+
+## AndrusOne Engineering Values
+
+This repository embodies these core principles:
+
+1. Clarity over Cleverness — If it's hard to read, it's hard to trust
+2. Reliability over Performance — Unreliable code scales mistakes
+3. Testability over Trust — Testing removes doubt
+4. Observability over Assumptions — Instrument everything
+5. Simplicity over Complexity — Simplicity scales, complexity fails
+6. Ownership over Blame — Accountability creates progress
+7. Empathy over Ego — Code is read more than written. Be human
+
+---
+
+## About
+
+Created and maintained by Dave Andrus as part of the AndrusOne open tools initiative.
+For updates and related projects, visit [andrusone.dev](https://andrusone.dev)
+
+---
