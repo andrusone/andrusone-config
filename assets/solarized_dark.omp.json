@@ -1,0 +1,113 @@
+{
+    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+    "blocks": [
+      {
+        "type": "prompt",
+        "alignment": "right",
+        "segments": [
+          {
+            "properties": {
+              "prefix": " \ufa1a ",
+              "style": "houston",
+              "threshold": 1000
+            },
+            "leading_diamond": "\ue0b6",
+            "trailing_diamond": "\ue0b0",
+            "foreground": "white",
+            "background": "lightRed",
+            "type": "executiontime",
+            "style": "diamond"
+          },
+          {
+            "properties": {
+              "always_enabled": false,
+              "always_numeric": true,
+              "color_background": true,
+              "display_exit_code": true,
+              "error_color": "red",
+              "prefix": " \ue23a "
+            },
+            "trailing_diamond": "\ue0b4",
+            "foreground": "white",
+            "powerline_symbol": "\ue0b0",
+            "background": "cyan",
+            "type": "exit",
+            "style": "diamond"
+          }
+        ]
+      },
+      {
+        "type": "newline"
+      },
+      {
+        "type": "prompt",
+        "alignment": "left",
+        "segments": [
+          {
+            "properties": {
+              "macos": "\uf179 ",
+              "postfix": "",
+              "prefix": "",
+              "windows": "\uf17a "
+            },
+            "leading_diamond": "\ue0b6",
+            "trailing_diamond": "\ue0b0",
+            "foreground": "black",
+            "background": "white",
+            "type": "os",
+            "style": "diamond"
+          },
+          {
+            "properties": {
+              "home_icon": "\uf015",
+              "prefix": " \ue5ff ",
+              "style": "full"
+            },
+            "foreground": "black",
+            "powerline_symbol": "\ue0b0",
+            "background": "blue",
+            "type": "path",
+            "style": "powerline"
+          },
+          {
+            "properties": {
+              "display_account": true,
+              "display_profile": true,
+              "display_region": false,
+              "display_role": true
+            },
+            "foreground": "black",
+            "powerline_symbol": "\ue0b0",
+            "background": "yellow",
+            "type": "aws",
+            "style": "powerline"
+          },
+          {
+            "properties": {
+              "display_stash_count": true,
+              "display_upstream_icon": false,
+              "local_changes_color": "yellow",
+              "status_colors_enabled": true
+            },
+            "foreground": "black",
+            "powerline_symbol": "\ue0b0",
+            "background": "green",
+            "type": "git",
+            "style": "powerline"
+          },
+          {
+            "properties": {
+              "prefix": " \ue235 "
+            },
+            "foreground": "#100e23",
+            "powerline_symbol": "\ue0b0",
+            "background": "#906cff",
+            "type": "python",
+            "style": "powerline"
+          }
+        ]
+      }
+    ],
+    "version": 3,
+    "final_space": true
+  }
