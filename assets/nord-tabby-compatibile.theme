@@ -1,0 +1,38 @@
+# Based on Nord, adjusted to match Tabby's ANSI palette
+
+# File types
+file:               #D8DEE9
+dir:                #81A1C1
+symlink:            #88C0D0
+exe:                #A3BE8C
+block-device:       #B48EAD
+char-device:        #EBCB8B
+socket:             #5E81AC
+pipe:               #8FBCBB
+
+# Special
+broken:             #BF616A
+missing:            #BF616A
+orphan:             #BF616A
+setuid:             #EBCB8B
+setgid:             #EBCB8B
+sticky:             #EBCB8B
+other-writable:     #D08770
+
+# Archive
+archive:            #D08770
+image:              #81A1C1
+audio:              #B48EAD
+video:              #88C0D0
+
+# Text
+document:           #EBCB8B
+code:               #A3BE8C
+
+# Git
+git-modified:       #D08770
+git-added:          #A3BE8C
+git-removed:        #BF616A
+git-renamed:        #EBCB8B
+git-untracked:      #B48EAD
+git-ignored:        #4C566A
