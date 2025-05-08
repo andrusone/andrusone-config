@@ -33,7 +33,7 @@
 
 set -e
 
-MOUNT_DEV="/dev/sda3"
+MOUNT_DEV=$(findmnt -no SOURCE /)
 MOUNT_POINT="/mnt"
 
 # Detect if user is running over SSH
@@ -49,7 +49,7 @@ if [[ -n "$SSH_CONNECTION" ]]; then
 fi
 
 echo ">> Mounting root Btrfs volume"
-mount $MOUNT_DEV $MOUNT_POINT
+mount "$MOUNT_DEV" "$MOUNT_POINT"
 
 echo ">> Creating subvolumes"
 for subvol in @ @home @log @cache @snapshots; do
@@ -69,7 +69,7 @@ mv $MOUNT_POINT/var/cache/* $MOUNT_POINT/@cache/    2>/dev/null || true
 echo ">> Unmounting volume"
 umount $MOUNT_POINT
 
-UUID=$(blkid -s UUID -o value $MOUNT_DEV)
+UUID=$(blkid -s UUID -o value "$MOUNT_DEV")
 
 echo ">> Updating /etc/fstab with subvolume entries"
 
