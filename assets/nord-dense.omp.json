@@ -1,0 +1,82 @@
+{
+    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+    "version": 3,
+    "final_space": true,
+    "blocks": [
+      {
+        "type": "prompt",
+        "alignment": "right",
+        "segments": [
+          {
+            "type": "executiontime",
+            "style": "powerline",
+            "background": "#D08770",
+            "foreground": "#D8DEE9",
+            "properties": {
+              "threshold": 500,
+              "prefix": " \u23f1 "
+            }
+          },
+          {
+            "type": "exit",
+            "style": "powerline",
+            "background": "#BF616A",
+            "foreground": "#D8DEE9",
+            "properties": {
+              "display_exit_code": true,
+              "prefix": " \u274c "
+            }
+          }
+        ]
+      },
+      {
+        "type": "newline"
+      },
+      {
+        "type": "prompt",
+        "alignment": "left",
+        "segments": [
+          {
+            "type": "path",
+            "style": "powerline",
+            "background": "#5E81AC",
+            "foreground": "#D8DEE9",
+            "properties": {
+              "home_icon": "\ud83c\udfe0",
+              "style": "folder"
+            }
+          },
+          {
+            "type": "aws",
+            "style": "powerline",
+            "background": "#EBCB8B",
+            "foreground": "#2E3440",
+            "properties": {
+              "display_account": true,
+              "display_role": true
+            }
+          },
+          {
+            "type": "git",
+            "style": "powerline",
+            "background": "#A3BE8C",
+            "foreground": "#2E3440",
+            "properties": {
+              "display_status": true,
+              "display_stash_count": true,
+              "status_colors_enabled": true
+            }
+          },
+          {
+            "type": "python",
+            "style": "powerline",
+            "background": "#B48EAD",
+            "foreground": "#2E3440",
+            "properties": {
+              "prefix": " \ud83d\udc0d "
+            }
+          }
+        ]
+      }
+    ]
+  }
