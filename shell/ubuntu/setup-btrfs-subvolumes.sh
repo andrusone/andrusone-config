@@ -92,4 +92,25 @@ else
     echo ">> /etc/fstab already contains subvolume entries — skipping append."
 fi
 
+echo ">> Creating Btrfs subvolume login reminder"
+
+# Adding login reminder about subvolumes since it's not standard
+cat <<'EOF' | sudo tee /etc/profile.d/btrfs-subvolumes.sh > /dev/null
+#!/bin/bash
+# Reminder: Btrfs subvolumes are active on this system
+
+if [[ $- == *i* ]]; then  # Only show for interactive login
+  echo
+  echo "🧠 Btrfs Subvolumes in use on this system:"
+  echo "-----------------------------------------"
+  findmnt -rn -t btrfs | awk '{printf "• %-15s → %s\n", $2, $1}'
+  echo
+  echo "Reminder: Root is mounted as subvolume @"
+  echo
+fi
+EOF
+
+chmod +x /etc/profile.d/btrfs-subvolumes.sh
+
+
 echo "✅ Done. Reboot and verify layout with: findmnt -t btrfs && btrfs subvolume list /"
