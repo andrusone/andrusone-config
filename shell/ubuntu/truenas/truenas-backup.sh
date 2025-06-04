@@ -72,4 +72,7 @@ echo "Backing up network and user configurations..."
 midclt call network.configuration.config > "$LOCAL_BACKUP/network_config.json"
 midclt call user.query > "$LOCAL_BACKUP/users.json"
 
+# Report success
+curl https://hc-ping.com/46763be9-620b-4ad0-a8a9-42f34af443d0
+
 echo "===== Backup completed: $(date) ====="
