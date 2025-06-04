@@ -41,3 +41,4 @@ echo "[+] Deleting backup files older than ${RETENTION_DAYS} days"
 find "${BACKUP_ROOT}" -name '*.zst' -mtime +${RETENTION_DAYS} -delete
 
 echo -e "\e[32m[✔] Backup completed successfully for ${HOSTNAME} on ${DATE}\e[0m"
+curl https://hc-ping.com/da1f49be-ee8b-4d5c-aff4-60f51cdfda8f
