@@ -36,31 +36,38 @@ cp "/mnt/.ix-apps/user_config.yaml" "$LOCAL_BACKUP/"
 echo "Creating ix-apps.tar.gz..."
 tar -czf "$LOCAL_BACKUP/ix-apps.tar.gz" -C /mnt/.ix-apps app_configs app_mounts
 
-# 4. Backup VMs via snapshots
-VM_PATH="HDD-RZ1-01/HDD-RZ1-ENC-LOCAL-01/VM"
-ZVOL_LIST=$(zfs list -H -o name -t volume | grep "^${VM_PATH}/")
+# 4. Backup ZVOLs from multiple datasets
+ZVOL_PATHS=(
+  "HDD-RZ1-01/HDD-RZ1-ENC-LOCAL-01/VM"
+  "HDD-RZ1-01/HDD-RZ1-ENC-CLOUD-01"
+)
 
-echo "Backing up VMs from $VM_PATH..."
-for ZVOL in $ZVOL_LIST; do
-  VM_NAME=$(basename "$ZVOL")
-  SNAPSHOT_NAME="${ZVOL}@backup"
+echo "Backing up ZVOLs from: ${ZVOL_PATHS[*]}"
 
-  echo "Processing $VM_NAME..."
+for BASE_PATH in "${ZVOL_PATHS[@]}"; do
+  ZVOL_LIST=$(zfs list -H -o name -t volume | grep "^${BASE_PATH}/")
 
-  # Delete previous snapshot if exists
-  if zfs list -t snapshot "$SNAPSHOT_NAME" >/dev/null 2>&1; then
-    echo "Deleting old snapshot: $SNAPSHOT_NAME"
-    zfs destroy "$SNAPSHOT_NAME"
-  fi
+  for ZVOL in $ZVOL_LIST; do
+    VM_NAME=$(basename "$ZVOL")
+    SNAPSHOT_NAME="${ZVOL}@backup"
 
-  # Create new snapshot
-  echo "Creating snapshot: $SNAPSHOT_NAME"
-  zfs snapshot "$SNAPSHOT_NAME"
+    echo "Processing $ZVOL..."
 
-  # Send and compress snapshot
-  SNAP_GZ="${LOCAL_BACKUP}/${VM_NAME}.zfs.gz"
-  echo "Sending and compressing snapshot to $SNAP_GZ"
-  zfs send "$SNAPSHOT_NAME" | gzip > "$SNAP_GZ"
+    # Delete previous snapshot if exists
+    if zfs list -t snapshot "$SNAPSHOT_NAME" >/dev/null 2>&1; then
+      echo "Deleting old snapshot: $SNAPSHOT_NAME"
+      zfs destroy "$SNAPSHOT_NAME"
+    fi
+
+    # Create new snapshot
+    echo "Creating snapshot: $SNAPSHOT_NAME"
+    zfs snapshot "$SNAPSHOT_NAME"
+
+    # Send and compress snapshot
+    SNAP_GZ="${LOCAL_BACKUP}/${VM_NAME}.zfs.gz"
+    echo "Sending and compressing snapshot to $SNAP_GZ"
+    zfs send "$SNAPSHOT_NAME" | gzip > "$SNAP_GZ"
+  done
 done
 
 # 5. Dump VM configurations
