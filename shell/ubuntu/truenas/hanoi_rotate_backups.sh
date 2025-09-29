@@ -3,7 +3,8 @@
 # hanoi_rotate_backups.sh
 # Move archives ONLY when today is 1) first-of-year, 2) first-of-quarter,
 # 3) first-of-month, or 4) first-of-week (priority in that order).
-# Otherwise: purge BASE/staging only. Uses .done gating.
+# Otherwise: purge BASE/staging AND delete any ready (.done) archives in SRC.
+# Uses .done gating to avoid moving half-written files.
 # ------------------------------------------------------------------------------
 
 set -euo pipefail
@@ -12,7 +13,7 @@ IFS=$'\n\t'
 # --- CONFIG -------------------------------------------------------------------
 BASE="/mnt/HDD-RZ1-01/HDD-RZ1-ENC-CLOUD-01"
 SRC="${BASE}"                         # where .tar/.tar.gz + .done appear
-STAGING="${BASE}/staging"             # only this gets purged on non-move days
+STAGING="${BASE}/staging"             # only this gets purged recursively
 SYNC="${BASE}/sync"
 
 DIR_YEARLY="${SYNC}/yearly"
@@ -66,31 +67,13 @@ prune_keep_newest() {
   fi
 }
 
-is_first_day_of_year() {
-  [[ "$(date +%m%d)" == "0101" ]]
-}
-
-is_first_day_of_quarter() {
-  local m d
-  m="$(date +%m)"
-  d="$(date +%d)"
-  [[ "$d" == "01" && ( "$m" == "01" || "$m" == "04" || "$m" == "07" || "$m" == "10" ) ]]
-}
-
-is_first_day_of_month() {
-  [[ "$(date +%d)" == "01" ]]
-}
-
+is_first_day_of_year()    { [[ "$(date +%m%d)" == "0101" ]]; }
+is_first_day_of_quarter() { local m d; m=$(date +%m); d=$(date +%d); [[ "$d" == "01" && ( "$m" == "01" || "$m" == "04" || "$m" == "07" || "$m" == "10" ) ]]; }
+is_first_day_of_month()   { [[ "$(date +%d)" == "01" ]]; }
 is_first_day_of_week() {
   # GNU date: %u (1=Mon..7=Sun)
-  local dow
-  dow="$(date +%u)"
-  if [[ "$WEEK_START" == "MONDAY" ]]; then
-    [[ "$dow" == "1" ]]
-  else
-    # default Sunday
-    [[ "$dow" == "7" ]]
-  fi
+  local dow; dow="$(date +%u)"
+  if [[ "$WEEK_START" == "MONDAY" ]]; then [[ "$dow" == "1" ]]; else [[ "$dow" == "7" ]]; fi
 }
 
 # Priority selection: Yearly > Quarterly > Monthly > Weekly
@@ -145,14 +128,30 @@ purge_staging_dir() {
   shopt -u dotglob nullglob; echo "$removed"
 }
 
+# NEW (Option B): also delete ready (.done) archives from SRC on non-move days
+purge_src_archives_nonmove() {
+  shopt -s nullglob
+  local removed=0
+  for f in "${SRC}"/*.tar "${SRC}"/*.tar.gz; do
+    [[ -e "${f}.done" ]] || continue
+    log "Purging non-move day archive: $f"
+    rm -f -- "${f}" "${f}.done"
+    ((removed++))
+  done
+  shopt -u nullglob
+  echo "$removed"
+}
+
 # --- MAIN ---------------------------------------------------------------------
 log "---- Hanoi rotate run starting ----"
 ensure_dirs
 pick_destination
 
 if ! should_move_today; then
-  log "Today is not Y/Q/M/W threshold; skipping moves. Purging staging only."
-  purged="$(purge_staging_dir || true)"; (( QUIET )) || log "Purged ${purged:-0} item(s) from ${STAGING}."
+  log "Today is not Y/Q/M/W threshold; skipping moves."
+  purged_src="$(purge_src_archives_nonmove || true)"
+  purged_staging="$(purge_staging_dir || true)"
+  (( QUIET )) || log "Purged ${purged_src:-0} file(s) from ${SRC} and ${purged_staging:-0} item(s) from ${STAGING}."
   log "---- Hanoi rotate run complete (purge-only) ----"; exit 0
 fi
 
@@ -160,7 +159,8 @@ fi
 shopt -s nullglob; pending=( "${SRC}"/*.tar "${SRC}"/*.tar.gz ); shopt -u nullglob
 if (( ${#pending[@]} == 0 )); then
   log "Move day but no .tar/.tar.gz in ${SRC}. Purging staging only."
-  purged="$(purge_staging_dir || true)"; (( QUIET )) || log "Purged ${purged:-0} item(s) from ${STAGING}."
+  purged_staging="$(purge_staging_dir || true)"
+  (( QUIET )) || log "Purged ${purged_staging:-0} item(s) from ${STAGING}."
   log "---- Hanoi rotate run complete ----"; exit 0
 fi
 
@@ -174,10 +174,12 @@ log "Destination: $DEST (keep $KEEP_COUNT)"
 moved_count="$(move_archives "$DEST")"
 if (( moved_count > 0 )); then
   log "Moved $moved_count file(s) to $DEST."
-  log "Pruning $DEST to keep newest $KEEP_COUNT file(s)."; prune_keep_newest "$DEST" "$KEEP_COUNT"
+  log "Pruning $DEST to keep newest $KEEP_COUNT file(s)."
+  prune_keep_newest "$DEST" "$KEEP_COUNT"
 else
   log "No files moved (no .done or race)."
 fi
 
-purged="$(purge_staging_dir || true)"; (( QUIET )) || log "Purged ${purged:-0} item(s) from ${STAGING}."
+purged_staging="$(purge_staging_dir || true)"
+(( QUIET )) || log "Purged ${purged_staging:-0} item(s) from ${STAGING}."
 log "---- Hanoi rotate run complete ----"
